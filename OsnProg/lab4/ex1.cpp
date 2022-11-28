@@ -3,14 +3,16 @@
 #define N1 10
 #define N2 5
 
+using namespace std;
+
 void array_init(int *A, int N) {
     srand(time(NULL));
     for (int i = 0; i < N; i++) {
         A[i] = rand() % 100;
-        if (i == 3) A[i] = 0;
-        std::cout << A[i] << " ";
+        if (i == N / 2) A[i] = 0;
+        cout << A[i] << " ";
     }
-    std::cout << std::endl;
+    cout << endl;
 }
 
 int *get_ptr(int *A, int N) {
@@ -26,7 +28,7 @@ int *get_ptr(int *A, int N) {
 int print_sum(int *A, int N) {
     int *p = get_ptr(A, N);
     if (p == nullptr) {
-        std::cout << "Zero elements not found!" << std::endl;
+        cout << "Zero elements not found!" << endl;
         return -1;
     }
 
@@ -36,8 +38,8 @@ int print_sum(int *A, int N) {
     for(i = 0; A + i != p; i++) s1 += A[i];
     for (i; i < N; i++) s2 += A[i];
 
-    std::cout << "First sum: " << s1 << std::endl;
-    std::cout << "Second sum: " << s2 << std::endl;
+    cout << "First sum: " << s1 << endl;
+    cout << "Second sum: " << s2 << endl;
 
     return 0;
 }
