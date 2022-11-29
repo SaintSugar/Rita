@@ -47,7 +47,7 @@ void get_line(char **buf) {
     char c = 0;
     int N = 0;
     while (true) {
-        c = cin.get();
+        scanf("%c", &c);
         if (c == '\n') break;
         char *buf2 = new char[N + 2];
         for (int i = 0; i < N; i++) buf2[i] = (*buf)[i];
