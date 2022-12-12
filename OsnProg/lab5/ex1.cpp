@@ -49,11 +49,16 @@ char *get_line() {
     int N = 0;
     while (true) {
         scanf("%c", &c);
-        if (c == '\n') break;
+        if (c == '\n' && N > 0) break;
+        else if (c == '\n' && N == 0) {
+            while (c == '\n') {
+                scanf("%c", &c);
+            }
+        }
         char *buf2 = new char[N + 2];
         for (int i = 0; i < N; i++) buf2[i] = buf[i];
         buf2[N] = c;
-        buf2[N + 1] = 0;
+        buf2[N + 1] = '\0';
         delete buf;
         buf = buf2;
         N++;
