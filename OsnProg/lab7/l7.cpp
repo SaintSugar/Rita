@@ -439,7 +439,7 @@ int menu(book **library, int *N) {
         cout << "Get information about the book............2\n";
         cout << "Find all books of the autor...............3\n";
         cout << "Find all autors of the piblishing house...4\n";
-        cout << "Finf all authors of retirement age........5\n";
+        cout << "Find all authors of retirement age........5\n";
         cout << "Exit the program..........................6\n";
         cout << "..........................................\n";
         cout << "Enter the number of function: ";
