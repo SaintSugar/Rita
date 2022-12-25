@@ -196,7 +196,7 @@ int LoadLibrary(book **library, int *N, char *filename) {
         book Book;
         char name[100], surname[100], father[100], month[100];
         char *title;
-        fscanf(f, "%s%s%s%d%s%d%d%s\n",
+        fscanf(f, "%s%s%s%d%s%d%d\n",
         name, surname, father, 
         &Book.Birth.day, month, &Book.Birth.year,
         &Book.Year
@@ -212,12 +212,12 @@ int LoadLibrary(book **library, int *N, char *filename) {
         strcpy(Book.Birth.month, month);
 
         
-        //fgets(buf, 1000, f);
+        fgets(buf, 1000, f);
         title = new char[strlen(buf)];
         strcpy(title, buf);
         title[strlen(buf) - 1] = '\0';
 
-        //Book.Title = title;
+        Book.Title = title;
 
         char *p_h;
         fgets(buf, 1000, f);
