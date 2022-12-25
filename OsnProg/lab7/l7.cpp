@@ -158,8 +158,7 @@ book MaximusBookus(book *library, int *index){
             SUS.Year = library[k].Year;            
     }
     SUS.Year = IntLength(SUS.Year);
-    SUS.Birth.year = IntLength(SUS.Birth.year);
-    SUS.Birth.day = IntLength(SUS.Birth.day);
+    SUS.Birth.day = IntLength(SUS.Birth.day) + strlen(SUS.Birth.month) + IntLength(SUS.Birth.year) + 2;
     return SUS;
 }
 
@@ -193,8 +192,8 @@ int Information(book *library, int *index) {
     if (strlen(TitleFather) > strlen(MaximumBook.FIO.father))
         MaximumBook.FIO.father = TitleFather;
 
-    if (strlen(TitleBirth) > strlen(MaximumBook.Birth.month) + MaximumBook.Birth.day + MaximumBook.Birth.year + 2 )
-        MaximumBook.FIO.surname = TitleSurname;
+    if (strlen(TitleBirth) > MaximumBook.Birth.day)
+        MaximumBook.Birth.day = strlen(TitleBirth);
 
     if (strlen(TitleBook) > strlen(MaximumBook.Title))
         MaximumBook.Title = TitleBook;
@@ -208,7 +207,7 @@ int Information(book *library, int *index) {
     Tabs[1] = strlen(MaximumBook.FIO.name) / 8 + WIDTH;
     Tabs[2] = strlen(MaximumBook.FIO.father) / 8 + WIDTH;
 
-    Tabs[3] = (strlen(MaximumBook.Birth.month) + MaximumBook.Birth.day + MaximumBook.Birth.year + 2) / 8 + WIDTH;
+    Tabs[3] = (MaximumBook.Birth.day) / 8 + WIDTH;
     
     Tabs[4] = strlen(MaximumBook.Title) / 8 + WIDTH;
     Tabs[5] = strlen(MaximumBook.Publish) / 8 + WIDTH;
@@ -255,7 +254,7 @@ int Information(book *library, int *index) {
         PrintChar('\t', Tabs[2] - strlen(library[k].FIO.father) / 8);
 
         cout << library[k].Birth.day << " " << library[k].Birth.month << " " << library[k].Birth.year;
-        PrintChar('\t', Tabs[3] - (strlen(library[k].Birth.month) + IntLength(library[k].Birth.day) + IntLength(library[k].Birth.year)) / 8);
+        PrintChar('\t', Tabs[3] - (strlen(library[k].Birth.month) + IntLength(library[k].Birth.day) + IntLength(library[k].Birth.year) + 2) / 8);
         
         cout << library[k].Title;
         PrintChar('\t' ,Tabs[4] - strlen(library[k].Title) / 8);
@@ -270,6 +269,7 @@ int Information(book *library, int *index) {
     }
     return 0;
 }
+
 
 int *Find_Book_by_Title(book *library, int N, char *Title) {
     int *index = new int [1];
@@ -430,6 +430,88 @@ int *Sort_Author(book *library, int *array_of_indexs) {
     return author_index;
 }
 
+int SaveLibrary (book *library, int N, char *filename) {
+    FILE *f = fopen(filename, "w");
+    if (f == nullptr) {
+        return -1;
+    }
+    fprintf(f, "%d\n", N);
+    book Book;
+    for (int i = 0; i < N; i++) {
+        Book = library[i];
+        fprintf(f, "%s\n%s\n%s\n%d\n%s\n%d\n%d\n%s\n%s\n",
+        Book.FIO.name, Book.FIO.surname, Book.FIO.father, 
+        Book.Birth.day, Book.Birth.month, Book.Birth.year,
+        Book.Year,
+        Book.Title, 
+        Book.Publish
+        );
+    }
+    fclose(f);
+    return 0;
+}
+
+
+int LoadLibrary(book **library, int *N, char *filename) {
+    FILE *f = fopen(filename, "r");
+    if (f == nullptr) {
+        return 0;
+    }
+    delete (*library);
+    fscanf(f, "%d", N);
+    (*library) = new book[*N];
+    char buf[100];
+    for (int i = 0; i < *N; i++) {        
+        book Book;
+        char name[100], surname[100], father[100], month[100];
+        char *title;
+        fscanf(f, "%s%s%s%d%s%d%d\n",
+        name, surname, father, 
+        &Book.Birth.day, month, &Book.Birth.year,
+        &Book.Year
+        );
+        Book.FIO.name = new char[strlen(name) + 1];
+        Book.FIO.father = new char[strlen(father) + 1];
+        Book.FIO.surname = new char[strlen(surname) + 1];
+        Book.Birth.month = new char[strlen(month) + 1];
+
+        strcpy(Book.FIO.name, name);
+        strcpy(Book.FIO.surname, surname);
+        strcpy(Book.FIO.father, father);
+        strcpy(Book.Birth.month, month);
+
+        
+        fgets(buf, 1000, f);
+        title = new char[strlen(buf)];
+        strcpy(title, buf);
+        title[strlen(buf) - 1] = '\0';
+
+        Book.Title = title;
+
+        char *p_h;
+        fgets(buf, 1000, f);
+        p_h = new char[strlen(buf)];
+        strcpy(p_h, buf);
+        p_h[strlen(buf) - 1] = '\0';
+
+        Book.Publish = p_h;
+       
+        cout << Book.FIO.surname << Book.FIO.name << Book.FIO.father << Book.Birth.day << Book.Birth.month << Book.Birth.year << Book.Title << Book.Publish << Book.Year << endl;
+        (*library)[i] = Book;
+    }
+
+    fclose(f);
+    return *N;
+}
+
+void ShowAllLibrary (book *library, int N) {
+    int *f = new int[N+1];
+    f[0] = N;
+    for(int i = 0; i < N; i++)
+        f[i+1] = i;
+    Information(library, f);
+}
+
 int menu(book **library, int *N) {
     cout << "Library(book)" <<endl << endl;
     while (true) {
@@ -439,7 +521,8 @@ int menu(book **library, int *N) {
         cout << "Find all books of the autor...............3\n";
         cout << "Find all autors of the piblishing house...4\n";
         cout << "Find all authors of retirement age........5\n";
-        cout << "Exit the program..........................6\n";
+        cout << "Show all books............................6\n";
+        cout << "Exit the program..........................7\n";
         cout << "..........................................\n";
         cout << "Enter the number of function: ";
         scanf("%d", &num);
@@ -494,17 +577,12 @@ int menu(book **library, int *N) {
                 break;
 
             }
-            case 6: {
+            case 7: {
                 cout << "Program is over.";
                 return 0;
             }
-            case 7: {
-                int a[100];
-                a[0] = *N;
-                for (int i = 1; i <= a[0]; i++) {
-                    a[i] = i - 1;
-                }
-                Information(*library, a);
+            case 6: {
+                ShowAllLibrary(*library, *N);
                 Pause();
                 char c;
                 scanf("%c", &c);
@@ -517,7 +595,9 @@ int menu(book **library, int *N) {
 int main() {
     book *library = nullptr;
     int N = 0;
+    N = LoadLibrary(&library, &N, "Lib");    
     menu(&library, &N);
+    SaveLibrary(library, N, "Lib");
     return 0;
 }
 
