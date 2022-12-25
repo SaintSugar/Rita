@@ -355,9 +355,9 @@ int Age(date Birth, date Current) {
     return Age;
 }
 
-bool Is_Retirement_Age(date Birth, date Current) {
+bool Is_Retirement_Age(date Birth, date Current, int tooOldAge) {
     int Author_Age = Age(Current, Birth);
-    if (Author_Age >= 60 && Author_Age <= 100) return true;
+    if (Author_Age >= tooOldAge) return true;
     return false;
 }
 
@@ -365,7 +365,7 @@ int *Find_Retirement_Age_Author(book *library, int N, date Current) {
     int *index = new int [1];
     index[0] = 0;
     for (int i = 0; i < N; i++) {
-        if (Is_Retirement_Age(library[i].Birth, Current)) {
+        if (Is_Retirement_Age(library[i].Birth, Current, 60)) {
             index[0]++;
             int *el = new int [index[0]+1];
             for (int j = 0; j < index[0]; j++) 
