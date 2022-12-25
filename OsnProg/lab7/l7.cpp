@@ -330,7 +330,7 @@ int MonthToInt(date M) {
     if (strcmp(M.month, "march") || strcmp(M.month, "March")) return 3;
     if (strcmp(M.month, "april") || strcmp(M.month, "April")) return 4;
     if (strcmp(M.month, "may") || strcmp(M.month, "May")) return 5;
-    if (strcmp(M.month, "jyne") || strcmp(M.month, "June")) return 6;
+    if (strcmp(M.month, "june") || strcmp(M.month, "June")) return 6;
     if (strcmp(M.month, "july") || strcmp(M.month, "July")) return 7;
     if (strcmp(M.month, "august") || strcmp(M.month, "August")) return 8;
     if (strcmp(M.month, "september") || strcmp(M.month, "September")) return 9;
