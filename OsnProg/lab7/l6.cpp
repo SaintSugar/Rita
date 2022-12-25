@@ -152,7 +152,7 @@ char *fget_line(FILE *f) {
 int LoadLibrary(book **library, int *N, char *filename) {
     FILE *f = fopen(filename, "r");
     if (f == nullptr) {
-        return -1;
+        return 0;
     }
     delete (*library);
     fscanf(f, "%d", N);
