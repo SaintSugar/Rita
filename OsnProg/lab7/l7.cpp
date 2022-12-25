@@ -485,7 +485,7 @@ int menu(book **library, int *N) {
                 break;
             }
             case 5: {
-                cout << "Enter the current date";
+                cout << "Enter the current date: ";
                 date current = Read_Date();
                 int *index = Find_Retirement_Age_Author(*library, *N, current);
                 int *authors = Sort_Author(*library, index);
