@@ -381,16 +381,18 @@ int Information(book *library, int *index) {
     }
     return 0;
 }
-
-int main() {
-    book *library = nullptr;
-    int N = 0;
-    N = LoadLibrary(&library, &N, "ldb.ldb");
+void ShowAllLibrary (book *library, int N) {
     int *f = new int[N+1];
     f[0] = N;
     for(int i = 0; i < N; i++)
         f[i+1] = i;
     Information(library, f);
+}
+int main() {
+    book *library = nullptr;
+    int N = 0;
+    N = LoadLibrary(&library, &N, "ldb.ldb");
+    ShowAllLibrary(library, N);
     AddBook(&library, &N);
     SaveLibrary(library, N, "ldb.ldb");
     return 0;
