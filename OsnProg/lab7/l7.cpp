@@ -25,8 +25,6 @@ struct book {
 
 date Read_Date() {
     date Birthdate;
-    cout << "Birthdate" << endl;
-
     int day;
     char buf[20];
     int year;
@@ -94,6 +92,7 @@ void AddBook(book **library, int *N) {
     Fio = Read_FIO();
     
     date Birth;
+    cout << "Birtdate" << endl;
     Birth = Read_Date();
     
     cout << "Title: ";
