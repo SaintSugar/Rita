@@ -323,8 +323,63 @@ int *Find_Book_by_Publisher(book *library, int N, char *p_h) {
     return index;
 }
 
-int *Sort_Author(book *library, int N, char *p_h) {
-    int *index = Find_Book_by_Publisher(library, N, p_h);
+
+
+int MonthToInt(date M) {
+    if (strcmp(M.month, "january") || strcmp(M.month, "January")) return 1;
+    if (strcmp(M.month, "february") || strcmp(M.month, "February")) return 2;
+    if (strcmp(M.month, "march") || strcmp(M.month, "March")) return 3;
+    if (strcmp(M.month, "april") || strcmp(M.month, "April")) return 4;
+    if (strcmp(M.month, "may") || strcmp(M.month, "May")) return 5;
+    if (strcmp(M.month, "jyne") || strcmp(M.month, "June")) return 6;
+    if (strcmp(M.month, "july") || strcmp(M.month, "July")) return 7;
+    if (strcmp(M.month, "august") || strcmp(M.month, "August")) return 8;
+    if (strcmp(M.month, "september") || strcmp(M.month, "September")) return 9;
+    if (strcmp(M.month, "october") || strcmp(M.month, "October")) return 10;
+    if (strcmp(M.month, "november") || strcmp(M.month, "November")) return 11;
+    if (strcmp(M.month, "december") || strcmp(M.month, "December")) return 12;
+    return (-1);
+}
+
+int Age(date Birth, date Current) {
+    int Age = Current.year - Birth.year;
+    int CurrentMonth, BirthMonth;
+    int CurrentDay, BirthDay;
+    CurrentMonth = MonthToInt(Current);
+    BirthMonth = MonthToInt(Birth);
+    if (CurrentMonth > BirthMonth) return Age;
+    if (CurrentMonth < BirthMonth) return (Age-1);
+    CurrentDay = Current.day;
+    BirthDay = Birth.day;
+    if (CurrentDay < BirthDay) return (Age - 1);
+    return Age;
+}
+
+bool Is_Retirement_Age(date Birth, date Current) {
+    int Author_Age = Age(Current, Birth);
+    if (Author_Age >= 60 && Author_Age <= 100) return true;
+    return false;
+}
+
+int *Find_Retirement_Age_Author(book *library, int N, date Current) {
+    int *index = new int [1];
+    index[0] = 0;
+    for (int i = 0; i < N; i++) {
+        if (Is_Retirement_Age(library[i].Birth, Current)) {
+            index[0]++;
+            int *el = new int [index[0]+1];
+            for (int j = 0; j < index[0]; j++) 
+                el[j] = index[j];
+            el[index[0]] = i;
+            delete index;
+            index = el;
+        } 
+    }
+    return index;
+}
+
+int *Sort_Author(book *library, int *array_of_indexs) {
+    int *index = array_of_indexs;
 
     int *author_index = new int [1];
     author_index[0] = 0;
@@ -384,7 +439,8 @@ int menu(book **library, int *N) {
         cout << "Get information about the book............2\n";
         cout << "Find all books of the autor...............3\n";
         cout << "Find all autors of the piblishing house...4\n";
-        cout << "Exit the program..........................5\n";
+        cout << "Finf all authors of retirement age........5\n";
+        cout << "Exit the program..........................6\n";
         cout << "..........................................\n";
         cout << "Enter the number of function: ";
         scanf("%d", &num);
@@ -422,17 +478,28 @@ int menu(book **library, int *N) {
                 cout << "Enter the publisher's name: ";
                 char *buf;
                 buf = get_line();
-                int *authors = Sort_Author(*library, *N, buf);
+                int *index = Find_Book_by_Publisher(*library, *N, buf);
+                int *authors = Sort_Author(*library, index);
                 delete authors;
                 delete buf;
                 Pause();
                 break;
             }
             case 5: {
+                cout << "Enter the current date";
+                date current = Read_Date();
+                int *index = Find_Retirement_Age_Author(*library, *N, current);
+                int *authors = Sort_Author(*library, index);
+                delete authors;
+                Pause();
+                break;
+
+            }
+            case 6: {
                 cout << "Program is over.";
                 return 0;
             }
-            case 6: {
+            case 7: {
                 int a[100];
                 a[0] = *N;
                 for (int i = 1; i <= a[0]; i++) {
