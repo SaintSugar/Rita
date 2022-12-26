@@ -325,37 +325,34 @@ int *Find_Book_by_Publisher(book *library, int N, char *p_h) {
 
 
 int MonthToInt(date M) {
-    if (strcmp(M.month, "january") || strcmp(M.month, "January")) return 1;
-    if (strcmp(M.month, "february") || strcmp(M.month, "February")) return 2;
-    if (strcmp(M.month, "march") || strcmp(M.month, "March")) return 3;
-    if (strcmp(M.month, "april") || strcmp(M.month, "April")) return 4;
-    if (strcmp(M.month, "may") || strcmp(M.month, "May")) return 5;
-    if (strcmp(M.month, "june") || strcmp(M.month, "June")) return 6;
-    if (strcmp(M.month, "july") || strcmp(M.month, "July")) return 7;
-    if (strcmp(M.month, "august") || strcmp(M.month, "August")) return 8;
-    if (strcmp(M.month, "september") || strcmp(M.month, "September")) return 9;
-    if (strcmp(M.month, "october") || strcmp(M.month, "October")) return 10;
-    if (strcmp(M.month, "november") || strcmp(M.month, "November")) return 11;
-    if (strcmp(M.month, "december") || strcmp(M.month, "December")) return 12;
+    if (strcmp(M.month, "january") == 0 || strcmp(M.month, "January") == 0) return 1;
+    if (strcmp(M.month, "february") == 0 || strcmp(M.month, "February") == 0) return 2;
+    if (strcmp(M.month, "march") == 0 || strcmp(M.month, "March") == 0) return 3;
+    if (strcmp(M.month, "april") == 0 || strcmp(M.month, "April") == 0) return 4;
+    if (strcmp(M.month, "may") == 0 || strcmp(M.month, "May") == 0) return 5;
+    if (strcmp(M.month, "june") == 0 || strcmp(M.month, "June") == 0) return 6;
+    if (strcmp(M.month, "july") == 0 || strcmp(M.month, "July") == 0) return 7;
+    if (strcmp(M.month, "august") == 0 || strcmp(M.month, "August") == 0) return 8;
+    if (strcmp(M.month, "september") == 0 || strcmp(M.month, "September") == 0) return 9;
+    if (strcmp(M.month, "october") == 0 || strcmp(M.month, "October") == 0) return 10;
+    if (strcmp(M.month, "november") == 0 || strcmp(M.month, "November") == 0) return 11;
+    if (strcmp(M.month, "december") == 0 || strcmp(M.month, "December") == 0) return 12;
     return (-1);
 }
 
 int Age(date Birth, date Current) {
     int Age = Current.year - Birth.year;
     int CurrentMonth, BirthMonth;
-    int CurrentDay, BirthDay;
     CurrentMonth = MonthToInt(Current);
     BirthMonth = MonthToInt(Birth);
     if (CurrentMonth > BirthMonth) return Age;
-    if (CurrentMonth < BirthMonth) return (Age-1);
-    CurrentDay = Current.day;
-    BirthDay = Birth.day;
-    if (CurrentDay < BirthDay) return (Age - 1);
+    else if (CurrentMonth < BirthMonth) return (Age-1);
+    if (Current.day < Birth.day) return (Age - 1);
     return Age;
 }
 
 bool Is_Retirement_Age(date Birth, date Current, int tooOldAge) {
-    int Author_Age = Age(Current, Birth);
+    int Author_Age = Age(Birth, Current);
     if (Author_Age >= tooOldAge) return true;
     return false;
 }
@@ -564,6 +561,7 @@ int menu(book **library, int *N) {
                 int *authors = Sort_Author(*library, index);
                 delete authors;
                 delete buf;
+                delete index;
                 Pause();
                 break;
             }
@@ -573,7 +571,10 @@ int menu(book **library, int *N) {
                 int *index = Find_Retirement_Age_Author(*library, *N, current);
                 int *authors = Sort_Author(*library, index);
                 delete authors;
+                delete index;
                 Pause();
+                char c;
+                scanf("%c", &c);
                 break;
 
             }
